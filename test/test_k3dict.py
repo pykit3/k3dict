@@ -5,7 +5,7 @@ import copy
 import operator
 import unittest
 
-import k3dictutil
+import k3dict
 import k3ut
 
 dd = k3ut.dd
@@ -40,7 +40,7 @@ class TestDictDeepIter(unittest.TestCase):
 
             idx = 0
 
-            for rst in k3dictutil.depth_iter(_in):
+            for rst in k3dict.depth_iter(_in):
                 self.assertEqual(
                     _out[idx],
                     rst,
@@ -63,9 +63,9 @@ class TestDictDeepIter(unittest.TestCase):
             (['mykey', 'k1', 'k11'], 'v11'),
             (['mykey', 'k2'], 'v2'),
         ]
-        _mes = 'test argument ks in k3dictutil.dict_depth_iter()'
+        _mes = 'test argument ks in k3dict.dict_depth_iter()'
 
-        for rst in k3dictutil.depth_iter(_in, ks=ks):
+        for rst in k3dict.depth_iter(_in, ks=ks):
             self.assertEqual(
                 _out[idx],
                 rst,
@@ -104,7 +104,7 @@ class TestDictDeepIter(unittest.TestCase):
         ]
 
         for depth in range(1, 5):
-            for rst in k3dictutil.depth_iter(_in, maxdepth=depth):
+            for rst in k3dict.depth_iter(_in, maxdepth=depth):
                 dd('depth:', depth)
                 dd('_in:', _in)
                 dd('_out[idx]:', _out[idx])
@@ -135,7 +135,7 @@ class TestDictDeepIter(unittest.TestCase):
         ]
 
         idx = 0
-        for rst in k3dictutil.depth_iter(_in, intermediate=True):
+        for rst in k3dict.depth_iter(_in, intermediate=True):
             self.assertEqual(
                 _out[idx],
                 rst)
@@ -163,7 +163,7 @@ class TestDictDeepIter(unittest.TestCase):
         ]
 
         idx = 0
-        for rst in k3dictutil.depth_iter(_in, empty_leaf=True):
+        for rst in k3dict.depth_iter(_in, empty_leaf=True):
             self.assertEqual(_out[idx], rst)
             idx = idx + 1
 
@@ -191,7 +191,7 @@ class TestDictDeepIter(unittest.TestCase):
         ]
 
         idx = 0
-        for rst in k3dictutil.depth_iter(_in, intermediate=True, empty_leaf=True):
+        for rst in k3dict.depth_iter(_in, intermediate=True, empty_leaf=True):
             self.assertEqual(_out[idx], rst)
             idx = idx + 1
 
@@ -245,7 +245,7 @@ class TestDictDeepIter(unittest.TestCase):
             dd(kwargs)
             dd('expected:', expected_ks, expected_v)
 
-            for ks, v in k3dictutil.depth_iter(_in, **kwargs):
+            for ks, v in k3dict.depth_iter(_in, **kwargs):
                 self.assertEqual(expected_ks, ks)
                 self.assertEqual(expected_v, v)
 
@@ -270,7 +270,7 @@ class TestDictBreadthIter(unittest.TestCase):
 
             idx = 0
 
-            for rst in k3dictutil.breadth_iter(_in):
+            for rst in k3dict.breadth_iter(_in):
                 self.assertEqual(
                     _out[idx],
                     rst,
@@ -397,7 +397,7 @@ class TestGetter(unittest.TestCase):
     def assert_make_getter_str(self, _in, _out, default=0):
         if _in is None:
             return
-        rst = k3dictutil.make_getter_str(_in, default=default)
+        rst = k3dict.make_getter_str(_in, default=default)
         self.assertEqual(_out, rst,
                          'input: {_in}, expected: {_out}, actual: {rst}'.format(
                              _in=repr(_in),
@@ -556,17 +556,17 @@ class TestGetter(unittest.TestCase):
         )
 
         for _in, _dic in cases:
-            acc = k3dictutil.make_getter(_in, default=0)
+            acc = k3dict.make_getter(_in, default=0)
             with self.assertRaises(TypeError):
                 acc(_dic)
             with self.assertRaises(TypeError):
-                k3dictutil.get(_dic, _in)
+                k3dict.get(_dic, _in)
 
     def assert_getter_and_maker(self, _in, _dic, _out, _vars, _default):
 
         if _in is None:
             return
-        acc = k3dictutil.make_getter(_in, default=_default)
+        acc = k3dict.make_getter(_in, default=_default)
         rst = acc(_dic, vars=_vars)
         self.assertEqual(_out, rst,
                          'input: {_in}, {_default}, {_dic}, {_vars} expected: {_out}, actual: {rst}'.format(
@@ -578,9 +578,9 @@ class TestGetter(unittest.TestCase):
                              rst=repr(rst),
                          )
                          )
-        # test k3dictutil.get() with the same set of cases
-        rst = k3dictutil.get(_dic, _in, vars=_vars, default=_default)
-        dd('k3dictutil.get({dic}, {key_path} vars={vars}, default={default})'.format(
+        # test k3dict.get() with the same set of cases
+        rst = k3dict.get(_dic, _in, vars=_vars, default=_default)
+        dd('k3dict.get({dic}, {key_path} vars={vars}, default={default})'.format(
             dic=_dic,
             key_path=_in,
             vars=_vars,
@@ -611,20 +611,20 @@ class TestGetter(unittest.TestCase):
             dd('case: ', case)
 
             dic, key_path, vars, ign, expected = case
-            rst = k3dictutil.get(dic, key_path, vars=vars, ignore_vars_key_error=ign)
+            rst = k3dict.get(dic, key_path, vars=vars, ignore_vars_key_error=ign)
 
             dd('rst: ', rst)
 
             self.assertEqual(expected, rst)
 
         with self.assertRaises(KeyError):
-            k3dictutil.get({}, '$a', {}, ignore_vars_key_error=False)
+            k3dict.get({}, '$a', {}, ignore_vars_key_error=False)
 
         with self.assertRaises(KeyError):
-            k3dictutil.get({}, (('1', '$a',),), {}, ignore_vars_key_error=False)
+            k3dict.get({}, (('1', '$a',),), {}, ignore_vars_key_error=False)
 
         with self.assertRaises(KeyError):
-            k3dictutil.get({}, [('1', '$a',)], {}, ignore_vars_key_error=False)
+            k3dict.get({}, [('1', '$a',)], {}, ignore_vars_key_error=False)
 
 
 class TestSetter(unittest.TestCase):
@@ -710,7 +710,7 @@ class TestSetter(unittest.TestCase):
 
         for _key_path, _dic, _value, _expect in cases:
 
-            _set = k3dictutil.make_setter(_key_path)
+            _set = k3dict.make_setter(_key_path)
             rst = _set(_dic, _value)
 
             self.assertEqual(_value, rst,
@@ -777,7 +777,7 @@ class TestSetter(unittest.TestCase):
 
         for _key_path, _default, _dic, _expect in cases:
 
-            _set = k3dictutil.make_setter(_key_path, value=_default)
+            _set = k3dict.make_setter(_key_path, value=_default)
             rst = _set(_dic, vars=_vars)
 
             if callable(_default):
@@ -808,17 +808,17 @@ class TestSetter(unittest.TestCase):
 
     def test_setter_vars_inexistent(self):
 
-        _set = k3dictutil.make_setter('$a')
+        _set = k3dict.make_setter('$a')
 
         with self.assertRaises(KeyError):
             _set({}, vars={})
 
-        _set = k3dictutil.make_setter(['$a'])
+        _set = k3dict.make_setter(['$a'])
 
         with self.assertRaises(KeyError):
             _set({}, vars={})
 
-        _set = k3dictutil.make_setter(('$a',))
+        _set = k3dict.make_setter(('$a',))
 
         with self.assertRaises(KeyError):
             _set({}, vars={})
@@ -851,7 +851,7 @@ class TestSetter(unittest.TestCase):
 
         for _key_path, _default, _dic, _expect in cases:
 
-            _set = k3dictutil.make_setter(_key_path, value=_default)
+            _set = k3dict.make_setter(_key_path, value=_default)
             rst = _set(_dic, vars=_vars)
 
             if callable(_default):
@@ -1015,7 +1015,7 @@ class TestSetter(unittest.TestCase):
             return
 
         dd(_in, _default, _dic, _expect)
-        _set = k3dictutil.make_setter(_in, value=_default, incr=True)
+        _set = k3dict.make_setter(_in, value=_default, incr=True)
         rst = _set(_dic, vars=_vars)
         dd('rst:', rst)
         self.assertEqual(_expect, _dic,
@@ -1050,7 +1050,7 @@ class TestAttrDict(unittest.TestCase):
         )
 
         for args, kwargs, expected in cases:
-            rst = k3dictutil.attrdict(*args, **kwargs)
+            rst = k3dict.attrdict(*args, **kwargs)
             self.assertEqual(expected, rst,
                              'input: {a} {kw} {e}, rst: {rst}'.format(
                                  a=args, kw=kwargs, e=expected, rst=rst))
@@ -1060,7 +1060,7 @@ class TestAttrDict(unittest.TestCase):
 
     def test_dict_method(self):
 
-        ad = k3dictutil.attrdict(a=1, b=2)
+        ad = k3dict.attrdict(a=1, b=2)
 
         self.assertEqual(['a', 'b'], list(ad.keys()))
         self.assertEqual([1, 2], list(ad.values()))
@@ -1068,8 +1068,8 @@ class TestAttrDict(unittest.TestCase):
 
     def test_recursive(self):
 
-        ad = k3dictutil.attrdict(
-            x=1, y={'a': 3, 'b': dict(c=4), 'd': k3dictutil.attrdict(z=5)})
+        ad = k3dict.attrdict(
+            x=1, y={'a': 3, 'b': dict(c=4), 'd': k3dict.attrdict(z=5)})
 
         self.assertEqual(1, ad.x)
         self.assertEqual({'a': 3, 'b': {'c': 4}, 'd': {'z': 5}}, ad.y)
@@ -1079,7 +1079,7 @@ class TestAttrDict(unittest.TestCase):
 
     def test_writable(self):
 
-        ad = k3dictutil.attrdict(a={}, b={1: 2})
+        ad = k3dict.attrdict(a={}, b={1: 2})
         ad['x'] = 4
         self.assertEqual(4, ad.x)
         self.assertEqual(4, ad['x'])
@@ -1091,7 +1091,7 @@ class TestAttrDict(unittest.TestCase):
 
         # reference type value are always copied when accessing
 
-        ad = k3dictutil.attrdict_copy(a={}, b={'x': {'foo': 'bar'}})
+        ad = k3dict.attrdict_copy(a={}, b={'x': {'foo': 'bar'}})
         self.assertIsNot(ad.a, ad.a)
         self.assertIsNot(ad.b.x, ad.b.x)
         self.assertIsNot(ad['a'], ad['a'])
@@ -1125,7 +1125,7 @@ class TestAttrDict(unittest.TestCase):
 
     def test_attrdict_copy_as_dict(self):
 
-        ad = k3dictutil.attrdict_copy(a={}, b={'x': {}})
+        ad = k3dict.attrdict_copy(a={}, b={'x': {}})
         d = ad.as_dict()
 
         b2 = d['b']
@@ -1134,7 +1134,7 @@ class TestAttrDict(unittest.TestCase):
 
     def test_attr_overriding(self):
 
-        ad = k3dictutil.attrdict(items=1)
+        ad = k3dict.attrdict(items=1)
 
         with self.assertRaises(TypeError):
             list(ad.items())
@@ -1142,15 +1142,15 @@ class TestAttrDict(unittest.TestCase):
     def test_ref_to_same_item(self):
 
         x = {'a': 1}
-        ad = k3dictutil.attrdict(u=x, v=x)
+        ad = k3dict.attrdict(u=x, v=x)
 
         self.assertIs(ad.u, ad.v)
 
         x['x'] = x
-        ad = k3dictutil.attrdict(x)
+        ad = k3dict.attrdict(x)
 
-        self.assertTrue(isinstance(ad, k3dictutil.AttrDict))
-        self.assertTrue(isinstance(ad.x, k3dictutil.AttrDict))
+        self.assertTrue(isinstance(ad, k3dict.AttrDict))
+        self.assertTrue(isinstance(ad.x, k3dict.AttrDict))
         self.assertTrue(ad.x is not ad, 'attrdict does create a new dict')
         self.assertTrue(ad.x.x is ad.x, 'circular references work for all dict items.')
         self.assertTrue(ad.x.x.x is ad.x.x, 'circular references work for all dict items.(2)')
@@ -1195,14 +1195,14 @@ class TestIsSubDict(unittest.TestCase):
             dd(b)
             dd(expected)
 
-            rst = k3dictutil.contains(a, b)
+            rst = k3dict.contains(a, b)
             self.assertEqual(expected, rst)
 
     def test_intern_string(self):
 
         a = {'key': '123'}
         b = {'key': ''.join(['1', '2', '3'])}
-        self.assertTrue(k3dictutil.contains(a, b))
+        self.assertTrue(k3dict.contains(a, b))
 
     def test_recursive_dict(self):
 
@@ -1221,7 +1221,7 @@ class TestIsSubDict(unittest.TestCase):
         b[1][1] = {}
         b[1][1][1] = b
 
-        self.assertEqual(k3dictutil.contains(a, b), True)
+        self.assertEqual(k3dict.contains(a, b), True)
 
         # a -> {} -> b -> {} -> {}
         # ^                     |
@@ -1231,7 +1231,7 @@ class TestIsSubDict(unittest.TestCase):
         a[1] = {1: b}
         b[1] = {1: {1: a}}
 
-        self.assertEqual(k3dictutil.contains(a, b), True)
+        self.assertEqual(k3dict.contains(a, b), True)
 
         # a -.
         # ^  |
@@ -1243,7 +1243,7 @@ class TestIsSubDict(unittest.TestCase):
         b = {}
         a[1] = a
         b[1] = b
-        self.assertEqual(k3dictutil.contains(a, b), True)
+        self.assertEqual(k3dict.contains(a, b), True)
 
         # a
         # b -.
@@ -1252,7 +1252,7 @@ class TestIsSubDict(unittest.TestCase):
         a = {}
         b = {}
         b[1] = b
-        self.assertEqual(k3dictutil.contains(a, b), False)
+        self.assertEqual(k3dict.contains(a, b), False)
 
     def test_recursive_dict_with_list(self):
         a = {'k': [0, 2]}
@@ -1262,7 +1262,7 @@ class TestIsSubDict(unittest.TestCase):
         b = {'k': [0, 2]}
         b['k'][0] = b
 
-        self.assertEqual(k3dictutil.contains(a, b), True)
+        self.assertEqual(k3dict.contains(a, b), True)
 
 
 class TestAdd(unittest.TestCase):
@@ -1354,14 +1354,14 @@ class TestAdd(unittest.TestCase):
             dd('kwargs:', kwargs)
             dd('expected:', expected)
 
-            result = k3dictutil.add(a, b, **kwargs)
+            result = k3dict.add(a, b, **kwargs)
             dd('rst:', result)
 
             self.assertIsNot(a, result)
             self.assertDictEqual(expected, result,
                                  repr([a, b, kwargs, result]))
 
-            result = k3dictutil.addto(a, b, **kwargs)
+            result = k3dict.addto(a, b, **kwargs)
 
             self.assertIs(a, result)
             self.assertDictEqual(expected, result,
@@ -1416,12 +1416,12 @@ class TestCombine(unittest.TestCase):
         )
 
         for a, b, op, exclude, recursive, expected in cases:
-            result = k3dictutil.combine(a, b, op, exclude=exclude, recursive=recursive)
+            result = k3dict.combine(a, b, op, exclude=exclude, recursive=recursive)
             self.assertIsNot(a, result)
             self.assertDictEqual(expected, result,
                                  repr([a, b, op, exclude, expected, result]))
 
-            result = k3dictutil.combineto(a, b, op, exclude=exclude, recursive=recursive)
+            result = k3dict.combineto(a, b, op, exclude=exclude, recursive=recursive)
             self.assertIs(a, result)
             self.assertDictEqual(expected, result,
                                  repr([a, b, op, exclude, expected, result]))
@@ -1456,7 +1456,7 @@ class TestCombine(unittest.TestCase):
         )
 
         for a, b, op, expected in cases:
-            result = k3dictutil.combine(a, b, op)
+            result = k3dict.combine(a, b, op)
             self.assertDictEqual(result, expected)
 
             add_value(a)
@@ -1543,7 +1543,7 @@ class TestDictutil(unittest.TestCase):
         for flds, kwargs, expected, msg in cases:
             dd('msg: ', msg)
             dd('expected: ', expected)
-            rst = k3dictutil.subdict(source_dict, flds, **kwargs)
+            rst = k3dict.subdict(source_dict, flds, **kwargs)
             dd('result:   ', rst)
 
             self.assertEqual(expected, rst)
@@ -1617,7 +1617,7 @@ class TestDictutil(unittest.TestCase):
             dd('msg :', msg)
             dd('expected: ', expected)
 
-            rst = k3dictutil.subdict(source_dict, flds, **kwargs)
+            rst = k3dict.subdict(source_dict, flds, **kwargs)
 
             dd('result:   ', rst)
 
@@ -1638,7 +1638,7 @@ class UserDefinedType(object):
         self.value = value
 
 
-class ForTestDict(k3dictutil.FixedKeysDict):
+class ForTestDict(k3dict.FixedKeysDict):
 
     keys_default = {
         'key_1': str,
@@ -1650,7 +1650,7 @@ class ForTestDict(k3dictutil.FixedKeysDict):
     ident_keys = ('key_2', 'key_1')
 
 
-class StrictFixedKeysDictFoo(k3dictutil.FixedKeysDict):
+class StrictFixedKeysDictFoo(k3dict.FixedKeysDict):
     keys_default = {
         # Does not accept default value.
         # Must specified when init it.

@@ -1,5 +1,5 @@
 """
-k3dictutil
+k3dict
 
 It provides with several dict operation functions.
 
@@ -13,7 +13,7 @@ This library is considered production ready.
 # from .proc import ProcError
 
 __version__ = "0.1.0"
-__name__ = "k3dictutil"
+__name__ = "k3dict"
 
 from .dictutil import (
     add,

@@ -1,16 +1,16 @@
-# k3dictutil
+# k3dict
 
-[![Action-CI](https://github.com/pykit3/k3dictutil/actions/workflows/python-package.yml/badge.svg)](https://github.com/pykit3/k3dictutil/actions/workflows/python-package.yml)
-[![Build Status](https://travis-ci.com/pykit3/k3dictutil.svg?branch=master)](https://travis-ci.com/pykit3/k3dictutil)
-[![Documentation Status](https://readthedocs.org/projects/k3dictutil/badge/?version=stable)](https://k3dictutil.readthedocs.io/en/stable/?badge=stable)
-[![Package](https://img.shields.io/pypi/pyversions/k3dictutil)](https://pypi.org/project/k3dictutil)
+[![Action-CI](https://github.com/pykit3/k3dict/actions/workflows/python-package.yml/badge.svg)](https://github.com/pykit3/k3dict/actions/workflows/python-package.yml)
+[![Build Status](https://travis-ci.com/pykit3/k3dict.svg?branch=master)](https://travis-ci.com/pykit3/k3dict)
+[![Documentation Status](https://readthedocs.org/projects/k3dict/badge/?version=stable)](https://k3dict.readthedocs.io/en/stable/?badge=stable)
+[![Package](https://img.shields.io/pypi/pyversions/k3dict)](https://pypi.org/project/k3dict)
 
 It provides with several dict operation functions.
 
-k3dictutil is a component of [pykit3] project: a python3 toolkit set.
+k3dict is a component of [pykit3] project: a python3 toolkit set.
 
 
-k3dictutil
+k3dict
 
 It provides with several dict operation functions.
 
@@ -24,14 +24,14 @@ This library is considered production ready.
 # Install
 
 ```
-pip install k3dictutil
+pip install k3dict
 ```
 
 # Synopsis
 
 ```python
 
-import k3dictutil
+import k3dict
 
 mydict = {'a':
               {'a.a': 'v-a.a',
@@ -41,7 +41,7 @@ mydict = {'a':
           }
 
 # depth-first iterative the dict
-for rst in k3dictutil.depth_iter(mydict):
+for rst in k3dict.depth_iter(mydict):
     print(rst)
 
 # output:
@@ -49,7 +49,7 @@ for rst in k3dictutil.depth_iter(mydict):
 #     (['a', 'a.b', 'a.b.a'], 'v-a.b.a')
 #     (['a', 'a.a'], 'v-a.a')
 
-for rst in k3dictutil.breadth_iter(mydict):
+for rst in k3dict.breadth_iter(mydict):
     print(rst)
 
 # output:
@@ -76,8 +76,8 @@ records = [
      "time": {"hour": 11, "minute": 20, }, },
 ]
 
-get_event = k3dictutil.make_getter('event', default="NOTHING DONE")
-get_time = k3dictutil.make_getter('time.$field')
+get_event = k3dict.make_getter('event', default="NOTHING DONE")
+get_time = k3dict.make_getter('time.$field')
 
 for record in records:
 

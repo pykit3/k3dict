@@ -1,4 +1,4 @@
-import k3dictutil
+import k3dict
 
 mydict = {'a':
               {'a.a': 'v-a.a',
@@ -8,7 +8,7 @@ mydict = {'a':
           }
 
 # depth-first iterative the dict
-for rst in k3dictutil.depth_iter(mydict):
+for rst in k3dict.depth_iter(mydict):
     print(rst)
 
 # output:
@@ -16,7 +16,7 @@ for rst in k3dictutil.depth_iter(mydict):
 #     (['a', 'a.b', 'a.b.a'], 'v-a.b.a')
 #     (['a', 'a.a'], 'v-a.a')
 
-for rst in k3dictutil.breadth_iter(mydict):
+for rst in k3dict.breadth_iter(mydict):
     print(rst)
 
 # output:
@@ -43,8 +43,8 @@ records = [
      "time": {"hour": 11, "minute": 20, }, },
 ]
 
-get_event = k3dictutil.make_getter('event', default="NOTHING DONE")
-get_time = k3dictutil.make_getter('time.$field')
+get_event = k3dict.make_getter('event', default="NOTHING DONE")
+get_time = k3dict.make_getter('time.$field')
 
 for record in records:
 
