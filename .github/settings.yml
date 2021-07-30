@@ -1,0 +1,6 @@
+_extends: gh-config
+
+repository:
+  description: It provides with several dict operation functions.
+  homepage: https://blog.openacid.com
+  topics: python, dictionary, util
