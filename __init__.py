@@ -12,8 +12,9 @@ This library is considered production ready.
 # from .proc import CalledProcessError
 # from .proc import ProcError
 
-__version__ = "0.1.2"
-__name__ = "k3dict"
+from importlib.metadata import version
+
+__version__ = version("k3dict")
 
 from .dictutil import (
     add,
@@ -54,7 +55,6 @@ __all__ = [
     "make_getter_str",
     "make_setter",
     "subdict",
-
     "AttrDict",
     "AttrDictCopy",
     "NoSuchKey",

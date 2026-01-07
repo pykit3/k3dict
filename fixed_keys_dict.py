@@ -10,6 +10,7 @@ class FixedKeysDict(dict):
     :param argkv: as builtin **dict**.
     :return: An instance of dictutil.FixedKeysDict.
     """
+
     # {'key', value_constructor}
     keys_default = {}
 
@@ -29,14 +30,12 @@ class FixedKeysDict(dict):
                 self[k] = self.keys_default[k]()
 
     def __setitem__(self, key, value):
-
         try:
             value = self.keys_default[key](value)
         except KeyError:
-            raise KeyError('key: {key} is invalid'.format(key=key))
+            raise KeyError("key: {key} is invalid".format(key=key))
         except (ValueError, TypeError) as e:
-            raise ValueError('value: {value} is invalid. {e}'.format(
-                value=repr(value), e=repr(e)))
+            raise ValueError("value: {value} is invalid. {e}".format(value=repr(value), e=repr(e)))
 
         super(FixedKeysDict, self).__setitem__(key, value)
 

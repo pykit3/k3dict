@@ -5,9 +5,7 @@ import copy
 import operator
 
 
-def depth_iter(mydict, ks=None, maxdepth=10240,
-               intermediate=False, empty_leaf=False,
-               is_allowed=None):
+def depth_iter(mydict, ks=None, maxdepth=10240, intermediate=False, empty_leaf=False, is_allowed=None):
     """
 
     mydict: the dict that you want to iterate on.
@@ -41,7 +39,6 @@ def depth_iter(mydict, ks=None, maxdepth=10240,
 
     dickeys = sorted(mydict.keys())
     for k in dickeys:
-
         v = mydict[k]
 
         ks.append(k)
@@ -51,7 +48,6 @@ def depth_iter(mydict, ks=None, maxdepth=10240,
                 yield ks, v
         else:
             if isinstance(v, dict):
-
                 if is_allowed is not None:
                     if is_allowed(ks, v):
                         yield ks, v
@@ -59,12 +55,14 @@ def depth_iter(mydict, ks=None, maxdepth=10240,
                     if intermediate or (empty_leaf and len(v) == 0):
                         yield ks, v
 
-                for _ks, v in depth_iter(v, ks,
-                                         maxdepth=maxdepth,
-                                         intermediate=intermediate,
-                                         empty_leaf=empty_leaf,
-                                         is_allowed=is_allowed,
-                                         ):
+                for _ks, v in depth_iter(
+                    v,
+                    ks,
+                    maxdepth=maxdepth,
+                    intermediate=intermediate,
+                    empty_leaf=empty_leaf,
+                    is_allowed=is_allowed,
+                ):
                     yield _ks, v
             else:
                 if is_allowed is None or is_allowed(ks, v):
@@ -112,16 +110,15 @@ def get(dic, key_path, vars=None, default=0, ignore_vars_key_error=None):
     if ignore_vars_key_error is None:
         ignore_vars_key_error = True
 
-    _default = vars.get('_default', default)
+    _default = vars.get("_default", default)
     node = dic
 
     _keys = key_path
 
     if isinstance(key_path, str):
-        _keys = key_path.split('.')
+        _keys = key_path.split(".")
 
     for k in _keys:
-
         try:
             key = _translate_var(k, vars)
         except KeyError:
@@ -139,36 +136,33 @@ def get(dic, key_path, vars=None, default=0, ignore_vars_key_error=None):
 
 
 def make_getter_str(key_path, default=0):
-    s = 'lambda dic, vars={}: dic'
+    s = "lambda dic, vars={}: dic"
 
     _keys = key_path
     if isinstance(key_path, str):
-        _keys = key_path.split('.')
+        _keys = key_path.split(".")
 
     for k in _keys:
-
         k_str = _translate_var_str(k)
 
-        s += '.get(%s, {})' % (k_str, )
+        s += ".get(%s, {})" % (k_str,)
 
-    s = s[:-3] + 'vars.get("_default", ' + repr(default) + '))'
+    s = s[:-3] + 'vars.get("_default", ' + repr(default) + "))"
 
     return s
 
 
 def _translate_var(k, vars):
     if isinstance(k, str):
-        if k.startswith('$'):
+        if k.startswith("$"):
             k = k[1:]
             if k in vars:
                 return str(vars[k])
             else:
-                raise KeyError('{k} does not exist in vars: {vars}'.format(
-                    k=k, vars=vars))
+                raise KeyError("{k} does not exist in vars: {vars}".format(k=k, vars=vars))
         else:
             return k
     elif isinstance(k, tuple):
-
         return tuple(_translate_var(kk, vars) for kk in k)
 
     else:
@@ -177,7 +171,7 @@ def _translate_var(k, vars):
 
 def _translate_var_str(k):
     if isinstance(k, str):
-        if k.startswith('$'):
+        if k.startswith("$"):
             return 'str(vars.get("%s", "_"))' % (k[1:],)
         else:
             return '"' + k + '"'
@@ -185,7 +179,7 @@ def _translate_var_str(k):
     elif isinstance(k, tuple):
         s = "("
         for kk in k:
-            s += _translate_var_str(kk) + ','
+            s += _translate_var_str(kk) + ","
         return s + ")"
     else:
         return repr(k)
@@ -219,17 +213,15 @@ def make_setter(key_path, value=None, incr=False):
     """
     _keys = key_path
     if isinstance(key_path, str):
-        _keys = key_path.split('.')
+        _keys = key_path.split(".")
 
     def_val = value
 
     def _set_dict(dic, value=None, vars={}):
-
-        k = 'self'
-        _node = {'self': dic}
+        k = "self"
+        _node = {"self": dic}
 
         for _k in _keys:
-
             if k not in _node:
                 _node[k] = {}
             _node = _node[k]
@@ -266,8 +258,7 @@ _iter_types = (dict, list, tuple)
 
 
 def _contains(a, b, has_compared):
-
-    if type(a) != type(b):
+    if type(a) is not type(b):
         return False
 
     if not isinstance(a, _iter_types):
@@ -304,7 +295,6 @@ def contains(a, b):
 
 
 class AttrDict(dict):
-
     """
     a = AttrDict({1:2}) # {1:2}
     a = AttrDict(x=3)   # {"x":3}
@@ -341,25 +331,22 @@ class AttrDict(dict):
 
 
 class AttrDictCopy(dict):
-
     # Allow to set attribute or key.
     # But when get attribute or key, the value is copied before returning.
     # To prevent changing original data.
 
     def __getattr__(self, k):
-
         if k not in self:
-            raise AttributeError(repr(k) + ' not found')
+            raise AttributeError(repr(k) + " not found")
 
         return self[k]
 
     def __setattr__(self, k, v):
-        raise AttributeError('AttrDictCopy does not allow to set attribute')
+        raise AttributeError("AttrDictCopy does not allow to set attribute")
 
     def __getitem__(self, k):
-
         if k not in self:
-            raise KeyError(repr(k) + ' not found')
+            raise KeyError(repr(k) + " not found")
 
         v = super(AttrDictCopy, self).__getitem__(k)
         if isinstance(v, AttrDictCopy):
@@ -371,7 +358,7 @@ class AttrDictCopy(dict):
             return copy.deepcopy(v)
 
     def __setitem__(self, k, v):
-        raise KeyError('AttrDictCopy does not allow to set key')
+        raise KeyError("AttrDictCopy does not allow to set key")
 
     def as_dict(self):
         d = {}
@@ -407,7 +394,6 @@ def attrdict_copy(*args, **kwargs):
 
 
 def _attrdict(attrdict_clz, d, ref):
-
     if not isinstance(d, dict):
         return d
 
@@ -509,7 +495,6 @@ def subdict(source, flds, use_default=False, default=None, deepcopy=False, deepc
     result = {}
 
     for k in flds:
-
         if k in source:
             val = source[k]
             result[k] = _copy_value(val, deepcopy)
@@ -528,7 +513,6 @@ def subdict(source, flds, use_default=False, default=None, deepcopy=False, deepc
 
 
 def _copy_value(val, deepcopy=False):
-
     if deepcopy:
         return copy.deepcopy(val)
 

@@ -1,11 +1,6 @@
 import k3dict
 
-mydict = {'a':
-              {'a.a': 'v-a.a',
-               'a.b': {'a.b.a': 'v-a.b.a'},
-               'a.c': {'a.c.a': {'a.c.a.a': 'v-a.c.a.a'}}
-               }
-          }
+mydict = {"a": {"a.a": "v-a.a", "a.b": {"a.b.a": "v-a.b.a"}, "a.c": {"a.c.a": {"a.c.a.a": "v-a.c.a.a"}}}}
 
 # depth-first iterative the dict
 for rst in k3dict.depth_iter(mydict):
@@ -31,27 +26,42 @@ for rst in k3dict.breadth_iter(mydict):
 #
 
 records = [
-    {"event": 'log in',
-     "time": {"hour": 10, "minute": 30, }, },
-
-    {"event": 'post a blog',
-     "time": {"hour": 10, "minute": 40, }, },
-
-    {"time": {"hour": 11, "minute": 20, }, },
-
-    {"event": 'log out',
-     "time": {"hour": 11, "minute": 20, }, },
+    {
+        "event": "log in",
+        "time": {
+            "hour": 10,
+            "minute": 30,
+        },
+    },
+    {
+        "event": "post a blog",
+        "time": {
+            "hour": 10,
+            "minute": 40,
+        },
+    },
+    {
+        "time": {
+            "hour": 11,
+            "minute": 20,
+        },
+    },
+    {
+        "event": "log out",
+        "time": {
+            "hour": 11,
+            "minute": 20,
+        },
+    },
 ]
 
-get_event = k3dict.make_getter('event', default="NOTHING DONE")
-get_time = k3dict.make_getter('time.$field')
+get_event = k3dict.make_getter("event", default="NOTHING DONE")
+get_time = k3dict.make_getter("time.$field")
 
 for record in records:
-
     ev = get_event(record)
 
-    tm = "%d:%d" % (get_time(record, {"field": "hour"}),
-                    get_time(record, {"field": "minute"}))
+    tm = "%d:%d" % (get_time(record, {"field": "hour"}), get_time(record, {"field": "minute"}))
 
     print("{ev:<12}   at {tm}".format(ev=ev, tm=tm))
 
