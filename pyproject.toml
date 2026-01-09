@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "k3dict"
-version = "0.1.10"
+version = "0.1.11"
 description = "Dict operation utilities including iteration, getter/setter makers, and attribute access"
 readme = "README.md"
 license = {text = "MIT"}
