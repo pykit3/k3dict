@@ -1,6 +1,3 @@
-#!/bin/env python2
-# coding: utf-8
-
 import copy
 import operator
 
@@ -55,15 +52,14 @@ def depth_iter(mydict, ks=None, maxdepth=10240, intermediate=False, empty_leaf=F
                     if intermediate or (empty_leaf and len(v) == 0):
                         yield ks, v
 
-                for _ks, v in depth_iter(
+                yield from depth_iter(
                     v,
                     ks,
                     maxdepth=maxdepth,
                     intermediate=intermediate,
                     empty_leaf=empty_leaf,
                     is_allowed=is_allowed,
-                ):
-                    yield _ks, v
+                )
             else:
                 if is_allowed is None or is_allowed(ks, v):
                     yield ks, v
@@ -145,7 +141,7 @@ def make_getter_str(key_path, default=0):
     for k in _keys:
         k_str = _translate_var_str(k)
 
-        s += ".get(%s, {})" % (k_str,)
+        s += f".get({k_str}, {{}})"
 
     s = s[:-3] + 'vars.get("_default", ' + repr(default) + "))"
 
@@ -159,7 +155,7 @@ def _translate_var(k, vars):
             if k in vars:
                 return str(vars[k])
             else:
-                raise KeyError("{k} does not exist in vars: {vars}".format(k=k, vars=vars))
+                raise KeyError(f"{k} does not exist in vars: {vars}")
         else:
             return k
     elif isinstance(k, tuple):
@@ -172,7 +168,7 @@ def _translate_var(k, vars):
 def _translate_var_str(k):
     if isinstance(k, str):
         if k.startswith("$"):
-            return 'str(vars.get("%s", "_"))' % (k[1:],)
+            return f'str(vars.get("{k[1:]}", "_"))'
         else:
             return '"' + k + '"'
 
@@ -217,7 +213,10 @@ def make_setter(key_path, value=None, incr=False):
 
     def_val = value
 
-    def _set_dict(dic, value=None, vars={}):
+    def _set_dict(dic, value=None, vars=None):
+        if vars is None:
+            vars = {}
+
         k = "self"
         _node = {"self": dic}
 
@@ -250,7 +249,7 @@ def make_setter(key_path, value=None, incr=False):
     return _set_dict
 
 
-class NoSuchKey(object):
+class NoSuchKey:
     pass
 
 
@@ -326,7 +325,7 @@ class AttrDict(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        super(AttrDict, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.__dict__ = self
 
 
@@ -348,7 +347,7 @@ class AttrDictCopy(dict):
         if k not in self:
             raise KeyError(repr(k) + " not found")
 
-        v = super(AttrDictCopy, self).__getitem__(k)
+        v = super().__getitem__(k)
         if isinstance(v, AttrDictCopy):
             # reduce it to a normal dict, or deepcopy can not set items to the new instance
             v = v.as_dict()
@@ -364,7 +363,7 @@ class AttrDictCopy(dict):
         d = {}
 
         for k in self.keys():
-            v = super(AttrDictCopy, self).__getitem__(k)
+            v = super().__getitem__(k)
             if isinstance(v, AttrDictCopy):
                 v = v.as_dict()
 
@@ -407,7 +406,7 @@ def _attrdict(attrdict_clz, d, ref):
     ad = attrdict_clz(d)
     ref[id(d)] = ad
 
-    for k in d.keys():
+    for k in d:
         sub_ad = _attrdict(attrdict_clz, d[k], ref)
         super(attrdict_clz, ad).__setitem__(k, sub_ad)
 

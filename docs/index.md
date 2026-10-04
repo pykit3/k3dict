@@ -19,12 +19,7 @@ pip install k3dict
 ```python
 import k3dict
 
-mydict = {'a':
-              {'a.a': 'v-a.a',
-               'a.b': {'a.b.a': 'v-a.b.a'},
-               'a.c': {'a.c.a': {'a.c.a.a': 'v-a.c.a.a'}}
-               }
-          }
+mydict = {"a": {"a.a": "v-a.a", "a.b": {"a.b.a": "v-a.b.a"}, "a.c": {"a.c.a": {"a.c.a.a": "v-a.c.a.a"}}}}
 
 # depth-first iterate the dict
 for rst in k3dict.depth_iter(mydict):

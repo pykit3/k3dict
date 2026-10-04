@@ -1,5 +1,4 @@
-#!/bin/env python2
-# coding: utf-8
+from typing import ClassVar
 
 
 class FixedKeysDict(dict):
@@ -12,13 +11,13 @@ class FixedKeysDict(dict):
     """
 
     # {'key', value_constructor}
-    keys_default = {}
+    keys_default: ClassVar[dict] = {}
 
     # ordered keys as ident
     ident_keys = ()
 
     def __init__(self, *args, **argkv):
-        super(FixedKeysDict, self).__init__(*args, **argkv)
+        super().__init__(*args, **argkv)
 
         # Convert present keys
         for k in self:
@@ -33,11 +32,11 @@ class FixedKeysDict(dict):
         try:
             value = self.keys_default[key](value)
         except KeyError:
-            raise KeyError("key: {key} is invalid".format(key=key))
+            raise KeyError(f"key: {key} is invalid")
         except (ValueError, TypeError) as e:
-            raise ValueError("value: {value} is invalid. {e}".format(value=repr(value), e=repr(e)))
+            raise ValueError(f"value: {value!r} is invalid. {e!r}")
 
-        super(FixedKeysDict, self).__setitem__(key, value)
+        super().__setitem__(key, value)
 
     def ident(self):
         return tuple([self[k] for k in self.ident_keys])

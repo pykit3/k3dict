@@ -1,12 +1,11 @@
-#!/usr/bin/env python2
-# coding: utf-8
-
 import copy
 import operator
 import unittest
+from typing import ClassVar
+
+import k3ut
 
 import k3dict
-import k3ut
 
 dd = k3ut.dd
 
@@ -45,9 +44,7 @@ class TestDictDeepIter(unittest.TestCase):
                 self.assertEqual(
                     _out[idx],
                     rst,
-                    ("input: {_in}, output: {rst}, expected: {_out}").format(
-                        _in=repr(_in), _out=repr(rst), rst=repr(_out[idx])
-                    ),
+                    (f"input: {_in!r}, output: {_out[idx]!r}, expected: {rst!r}"),
                 )
 
                 idx = idx + 1
@@ -67,9 +64,7 @@ class TestDictDeepIter(unittest.TestCase):
             self.assertEqual(
                 _out[idx],
                 rst,
-                ("input: {_in}, output: {rst}, expected: {_out},message: {_mes}").format(
-                    _in=repr(_in), _out=repr(rst), rst=repr(_out[idx]), _mes=_mes
-                ),
+                (f"input: {_in!r}, output: {_out[idx]!r}, expected: {rst!r},message: {_mes}"),
             )
 
             idx = idx + 1
@@ -250,11 +245,7 @@ class TestDictBreadthIter(unittest.TestCase):
                 self.assertEqual(
                     _out[idx],
                     rst,
-                    ("input: {_in}, output: {rst}, expected: {_out}").format(
-                        _in=repr(_in),
-                        _out=repr(rst),
-                        rst=repr(_out[idx]),
-                    ),
+                    (f"input: {_in!r}, output: {_out[idx]!r}, expected: {rst!r}"),
                 )
 
                 idx = idx + 1
@@ -387,11 +378,7 @@ class TestGetter(unittest.TestCase):
         self.assertEqual(
             _out,
             rst,
-            "input: {_in}, expected: {_out}, actual: {rst}".format(
-                _in=repr(_in),
-                _out=repr(_out),
-                rst=repr(rst),
-            ),
+            f"input: {_in!r}, expected: {_out!r}, actual: {rst!r}",
         )
 
     def test_getter_str_default(self):
@@ -581,37 +568,16 @@ class TestGetter(unittest.TestCase):
         self.assertEqual(
             _out,
             rst,
-            "input: {_in}, {_default}, {_dic}, {_vars} expected: {_out}, actual: {rst}".format(
-                _in=repr(_in),
-                _default=repr(_default),
-                _dic=repr(_dic),
-                _vars=repr(_vars),
-                _out=repr(_out),
-                rst=repr(rst),
-            ),
+            f"input: {_in!r}, {_default!r}, {_dic!r}, {_vars!r} expected: {_out!r}, actual: {rst!r}",
         )
         # test k3dict.get() with the same set of cases
         rst = k3dict.get(_dic, _in, vars=_vars, default=_default)
-        dd(
-            "k3dict.get({dic}, {key_path} vars={vars}, default={default})".format(
-                dic=_dic,
-                key_path=_in,
-                vars=_vars,
-                default=_default,
-            )
-        )
+        dd(f"k3dict.get({_dic}, {_in} vars={_vars}, default={_default})")
         dd(rst)
         self.assertEqual(
             _out,
             rst,
-            "input: {_in}, {_default}, {_dic}, {_vars} expected: {_out}, actual: {rst}".format(
-                _in=repr(_in),
-                _default=repr(_default),
-                _dic=repr(_dic),
-                _vars=repr(_vars),
-                _out=repr(_out),
-                rst=repr(rst),
-            ),
+            f"input: {_in!r}, {_default!r}, {_dic!r}, {_vars!r} expected: {_out!r}, actual: {rst!r}",
         )
 
     def test_get_ignore_vars_key_error(self):
@@ -785,23 +751,13 @@ class TestSetter(unittest.TestCase):
             self.assertEqual(
                 _value,
                 rst,
-                "input: {_key_path}, {_dic}; expected return value: {_value}, actual: {rst}".format(
-                    _key_path=repr(_key_path),
-                    _dic=repr(_dic),
-                    _value=repr(_value),
-                    rst=repr(rst),
-                ),
+                f"input: {_key_path!r}, {_dic!r}; expected return value: {_value!r}, actual: {rst!r}",
             )
 
             self.assertEqual(
                 _expect,
                 _dic,
-                "input: {_key_path}, {_dic}; expected dict: {_expect}, actual: {rst}".format(
-                    _key_path=repr(_key_path),
-                    _dic=repr(_dic),
-                    _expect=repr(_expect),
-                    rst=repr(rst),
-                ),
+                f"input: {_key_path!r}, {_dic!r}; expected dict: {_expect!r}, actual: {rst!r}",
             )
 
     def test_setter_default(self):
@@ -904,23 +860,13 @@ class TestSetter(unittest.TestCase):
             self.assertEqual(
                 _def,
                 rst,
-                "input: {_key_path}, {_dic}; expected return value: {_def}, actual: {rst}".format(
-                    _key_path=repr(_key_path),
-                    _dic=repr(_dic),
-                    _def=repr(_def),
-                    rst=repr(rst),
-                ),
+                f"input: {_key_path!r}, {_dic!r}; expected return value: {_def!r}, actual: {rst!r}",
             )
 
             self.assertEqual(
                 _expect,
                 _dic,
-                "input: {_key_path}, {_dic}; expected dict: {_expect}, actual: {rst}".format(
-                    _key_path=repr(_key_path),
-                    _dic=repr(_dic),
-                    _expect=repr(_expect),
-                    rst=repr(rst),
-                ),
+                f"input: {_key_path!r}, {_dic!r}; expected dict: {_expect!r}, actual: {rst!r}",
             )
 
             rst = _set(_dic, "specified", vars=_vars)
@@ -985,23 +931,13 @@ class TestSetter(unittest.TestCase):
             self.assertEqual(
                 _def,
                 rst,
-                "input: {_key_path}, {_dic}; expected return value: {_def}, actual: {rst}".format(
-                    _key_path=repr(_key_path),
-                    _dic=repr(_dic),
-                    _def=repr(_def),
-                    rst=repr(rst),
-                ),
+                f"input: {_key_path!r}, {_dic!r}; expected return value: {_def!r}, actual: {rst!r}",
             )
 
             self.assertEqual(
                 _expect,
                 _dic,
-                "input: {_key_path}, {_dic}; expected dict: {_expect}, actual: {rst}".format(
-                    _key_path=repr(_key_path),
-                    _dic=repr(_dic),
-                    _expect=repr(_expect),
-                    rst=repr(rst),
-                ),
+                f"input: {_key_path!r}, {_dic!r}; expected dict: {_expect!r}, actual: {rst!r}",
             )
 
             rst = _set(_dic, "specified", vars=_vars)
@@ -1203,12 +1139,7 @@ class TestSetter(unittest.TestCase):
         self.assertEqual(
             _expect,
             _dic,
-            "input: {_key_path}, {_dic}; expected dict: {_expect}, actual: {rst}".format(
-                _key_path=repr(_in),
-                _dic=repr(_dic),
-                _expect=repr(_expect),
-                rst=repr(rst),
-            ),
+            f"input: {_in!r}, {_dic!r}; expected dict: {_expect!r}, actual: {rst!r}",
         )
 
 
@@ -1226,9 +1157,7 @@ class TestAttrDict(unittest.TestCase):
 
         for args, kwargs, expected in cases:
             rst = k3dict.attrdict(*args, **kwargs)
-            self.assertEqual(
-                expected, rst, "input: {a} {kw} {e}, rst: {rst}".format(a=args, kw=kwargs, e=expected, rst=rst)
-            )
+            self.assertEqual(expected, rst, f"input: {args} {kwargs} {expected}, rst: {rst}")
 
             for k in rst:
                 self.assertEqual(rst[k], getattr(rst, k))
@@ -1241,7 +1170,7 @@ class TestAttrDict(unittest.TestCase):
         self.assertEqual([("a", 1), ("b", 2)], list(ad.items()))
 
     def test_recursive(self):
-        ad = k3dict.attrdict(x=1, y={"a": 3, "b": dict(c=4), "d": k3dict.attrdict(z=5)})
+        ad = k3dict.attrdict(x=1, y={"a": 3, "b": {"c": 4}, "d": k3dict.attrdict(z=5)})
 
         self.assertEqual(1, ad.x)
         self.assertEqual({"a": 3, "b": {"c": 4}, "d": {"z": 5}}, ad.y)
@@ -1360,7 +1289,8 @@ class TestIsSubDict(unittest.TestCase):
 
     def test_intern_string(self):
         a = {"key": "123"}
-        b = {"key": "".join(["1", "2", "3"])}
+        # Build "123" at runtime so it is equal to, but not the same object as, a["key"].
+        b = {"key": "".join(["1", "2", "3"])}  # noqa: FLY002
         self.assertTrue(k3dict.contains(a, b))
 
     def test_recursive_dict(self):
@@ -1596,8 +1526,7 @@ class TestDictutil(unittest.TestCase):
             return default_dict.get(k)
 
         def iter_keys():
-            for i in (0, "a", "b"):
-                yield i
+            yield from (0, "a", "b")
 
         cases = (
             (
@@ -1745,13 +1674,13 @@ class TestDictutil(unittest.TestCase):
                     self.assertIs(expected[k], rst[k])
 
 
-class UserDefinedType(object):
+class UserDefinedType:
     def __init__(self, value=None):
         self.value = value
 
 
 class ForTestDict(k3dict.FixedKeysDict):
-    keys_default = {
+    keys_default: ClassVar[dict] = {
         "key_1": str,
         "key_2": int,
         "key_3": dict,
@@ -1762,7 +1691,7 @@ class ForTestDict(k3dict.FixedKeysDict):
 
 
 class StrictFixedKeysDictFoo(k3dict.FixedKeysDict):
-    keys_default = {
+    keys_default: ClassVar[dict] = {
         # Does not accept default value.
         # Must specified when init it.
         "foo": lambda a: a

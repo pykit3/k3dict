@@ -17,6 +17,9 @@ from importlib.metadata import version
 __version__ = version("k3dict")
 
 from .dictutil import (
+    AttrDict,
+    AttrDictCopy,
+    NoSuchKey,
     add,
     addto,
     attrdict,
@@ -31,16 +34,16 @@ from .dictutil import (
     make_getter_str,
     make_setter,
     subdict,
-    NoSuchKey,
-    AttrDict,
-    AttrDictCopy,
 )
-
 from .fixed_keys_dict import (
     FixedKeysDict,
 )
 
 __all__ = [
+    "AttrDict",
+    "AttrDictCopy",
+    "FixedKeysDict",
+    "NoSuchKey",
     "add",
     "addto",
     "attrdict",
@@ -55,8 +58,4 @@ __all__ = [
     "make_getter_str",
     "make_setter",
     "subdict",
-    "AttrDict",
-    "AttrDictCopy",
-    "NoSuchKey",
-    "FixedKeysDict",
 ]

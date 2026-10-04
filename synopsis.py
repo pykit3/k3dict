@@ -61,9 +61,11 @@ get_time = k3dict.make_getter("time.$field")
 for record in records:
     ev = get_event(record)
 
-    tm = "%d:%d" % (get_time(record, {"field": "hour"}), get_time(record, {"field": "minute"}))
+    hour = get_time(record, {"field": "hour"})
+    minute = get_time(record, {"field": "minute"})
+    tm = f"{hour:d}:{minute:d}"
 
-    print("{ev:<12}   at {tm}".format(ev=ev, tm=tm))
+    print(f"{ev:<12}   at {tm}")
 
 # output:
 # log in         at 10:30
