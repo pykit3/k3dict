@@ -181,6 +181,20 @@ def _translate_var_str(k):
         return repr(k)
 
 
+def _translate_getter_var(k, vars):
+    # A missing var reads the key "_", as the source from make_getter_str() does.
+    if isinstance(k, str):
+        if k.startswith("$"):
+            return str(vars.get(k[1:], "_"))
+        else:
+            return k
+    elif isinstance(k, tuple):
+        return tuple(_translate_getter_var(kk, vars) for kk in k)
+
+    else:
+        return k
+
+
 def make_getter(key_path, default=0):
     """
     It creates a lambda that returns the value of the item specified by
@@ -190,7 +204,32 @@ def make_getter(key_path, default=0):
     It must be a primitive value such as `int`, `float`, `bool`, `string` or `None`.
     :return: the item value found by key_path, or the default value if not found.
     """
-    return eval(make_getter_str(key_path, default=default))
+    if isinstance(key_path, str):
+        _keys = key_path.split(".")
+    else:
+        # Copy the keys, so that changing `key_path` later does not change the getter.
+        _keys = list(key_path)
+
+    if len(_keys) == 0:
+        raise ValueError("key_path must not be empty")
+
+    parent_keys = _keys[:-1]
+    last_key = _keys[-1]
+
+    def _get_dict(dic, vars=None):
+        if vars is None:
+            vars = {}
+
+        node = dic
+        for k in parent_keys:
+            key = _translate_getter_var(k, vars)
+            node = node.get(key, {})
+
+        key = _translate_getter_var(last_key, vars)
+        _default = vars.get("_default", default)
+        return node.get(key, _default)
+
+    return _get_dict
 
 
 def make_setter(key_path, value=None, incr=False):

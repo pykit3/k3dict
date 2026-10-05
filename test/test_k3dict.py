@@ -635,6 +635,33 @@ class TestGetter(unittest.TestCase):
                 ignore_vars_key_error=False,
             )
 
+    def test_getter_arbitrary_str(self):
+        # Keys with quotes, backslashes, newlines, braces or non-ASCII text are read as they are.
+        keys = ('say "hi"', "it's", "c:\\temp", "new\nline", "{}", "中文")
+
+        for key in keys:
+            self.assert_getter_and_maker([key, key], {key: {key: 1}}, 1, {}, 0)
+            self.assert_getter_and_maker(["$" + key], {"v": 1}, 1, {key: "v"}, 0)
+
+    def test_getter_hostile_key(self):
+        # Between double quotes, each key becomes a Python expression whose value is
+        # the second item. A getter that ran it as code would read "evaluated".
+        cases = (
+            ('x" + "y', "xy"),
+            ('" + str(len("abc")) + "', "3"),
+        )
+
+        for key, code_value in cases:
+            _dic = {key: "literal", code_value: "evaluated"}
+            self.assert_getter_and_maker([key], _dic, "literal", {}, 0)
+
+            _vars = {key: "literal", code_value: "evaluated"}
+            self.assert_getter_and_maker(["$" + key], {"literal": 1, "evaluated": 2}, 1, _vars, 0)
+
+    def test_getter_empty_key_path(self):
+        with self.assertRaises(ValueError):
+            k3dict.make_getter([])
+
 
 class TestSetter(unittest.TestCase):
     def test_setter(self):
