@@ -399,6 +399,18 @@ class TestGetter(unittest.TestCase):
 
             self.assert_make_getter_str(_in_tuple, _out, default=_default)
 
+    def test_getter_str_escape(self):
+        # The last key would read key "3" if it were not escaped.
+        keys = ('say "hi"', "c:\\temp", "new\nline", '" + str(len("abc")) + "')
+        for key in keys:
+            src = k3dict.make_getter_str([key])
+            getter = eval(src)
+            self.assertEqual("v", getter({key: "v"}), src)
+
+        src = k3dict.make_getter_str(['$a"b'])
+        getter = eval(src)
+        self.assertEqual("v", getter({"x": "v"}, vars={'a"b': "x"}), src)
+
     def test_getter_vars(self):
         cases = (
             ("", [""], ("",), 0, {"x": 1, "": 1}, {}, 1),

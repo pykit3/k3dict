@@ -165,12 +165,20 @@ def _translate_var(k, vars):
         return k
 
 
+def _str_literal(s):
+    # Plain text keeps the double quotes the source has always used; repr() escapes the rest.
+    if s.isprintable() and '"' not in s and "\\" not in s:
+        return '"' + s + '"'
+    return repr(s)
+
+
 def _translate_var_str(k):
     if isinstance(k, str):
         if k.startswith("$"):
-            return f'str(vars.get("{k[1:]}", "_"))'
+            name = _str_literal(k[1:])
+            return f'str(vars.get({name}, "_"))'
         else:
-            return '"' + k + '"'
+            return _str_literal(k)
 
     elif isinstance(k, tuple):
         s = "("
