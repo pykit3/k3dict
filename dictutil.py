@@ -467,9 +467,9 @@ def combineto(a, b, op, exclude=None, recursive=True):
     :param op: the operation to take when combining common keys, such as `operator.add`.
     :param exclude: a dict used to specify keys than should not be combined
 
-    if exclude = {'k1': {'k2': True}}, then b['k1']['k2'] will be ignored
+    if `exclude = {'k1': {'k2': True}}`, then `b['k1']['k2']` will be ignored
 
-    if exclude = {'k1': True}, then b['k1'] will be ignored totally.
+    if `exclude = {'k1': True}`, then `b['k1']` will be ignored totally.
 
     :param recursive: a bool value, if set to `False`, will not dive into sub dict.
     :return: the combined dict.
