@@ -1697,9 +1697,41 @@ class StrictFixedKeysDictFoo(k3dict.FixedKeysDict):
     }
 
 
+class IntStrDict(k3dict.FixedKeysDict):
+    keys_default: ClassVar[dict] = {
+        "a": int,
+        "b": str,
+    }
+
+
 class TestFixedKeysDict(unittest.TestCase):
     def setUp(self):
         pass
+
+    def test_bulk_mutation(self):
+        d = IntStrDict()
+
+        d.update({"a": "1"}, b=2)
+        self.assertEqual({"a": 1, "b": "2"}, d)
+
+        d |= [("a", "3")]
+        self.assertEqual({"a": 3, "b": "2"}, d)
+
+        del d["a"]
+        rst = d.setdefault("a", "4")
+        self.assertEqual(4, rst)
+        self.assertEqual({"a": 4, "b": "2"}, d)
+
+        with self.assertRaises(KeyError):
+            d.update({"bad": 1, "a": "5"})
+        with self.assertRaises(ValueError):
+            d.update(a="wrong")
+        with self.assertRaises(KeyError):
+            d.setdefault("bad", 1)
+        with self.assertRaises(KeyError):
+            d |= {"bad": 1}
+
+        self.assertEqual({"a": 4, "b": "2"}, d)
 
     def test_strict(self):
         self.assertRaises(TypeError, StrictFixedKeysDictFoo, {})

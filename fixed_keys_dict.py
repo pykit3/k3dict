@@ -38,5 +38,20 @@ class FixedKeysDict(dict):
 
         super().__setitem__(key, value)
 
+    # dict's own update(), setdefault() and |= do not call __setitem__().
+    def update(self, *args, **argkv):
+        for k, v in dict(*args, **argkv).items():
+            self[k] = v
+
+    def setdefault(self, key, default=None):
+        if key not in self:
+            self[key] = default
+
+        return self[key]
+
+    def __ior__(self, other):
+        self.update(other)
+        return self
+
     def ident(self):
         return tuple([self[k] for k in self.ident_keys])
