@@ -254,9 +254,12 @@ def make_setter(key_path, value=None, incr=False):
     `vars` is a dictionary that contains dynamic item keys.
     `setter` returns the result value.
     """
-    _keys = key_path
     if isinstance(key_path, str):
         _keys = key_path.split(".")
+    else:
+        # Copy the keys, so that a generator key path works for every call, and changing `key_path` later does
+        # not change the setter.
+        _keys = list(key_path)
 
     def_val = value
 

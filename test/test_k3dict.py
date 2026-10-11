@@ -887,6 +887,22 @@ class TestSetter(unittest.TestCase):
         with self.assertRaises(KeyError):
             _set({}, vars={})
 
+    def test_setter_key_path_copied(self):
+        _set = k3dict.make_setter(k for k in ("a", "b"))
+        dic = {}
+
+        _set(dic, 1)
+        _set(dic, 2)
+        self.assertEqual({"a": {"b": 2}}, dic)
+
+        key_path = ["a"]
+        _set = k3dict.make_setter(key_path)
+        key_path.append("b")
+        dic = {}
+
+        _set(dic, 3)
+        self.assertEqual({"a": 3}, dic)
+
     def test_setter_vars(self):
         cases = (
             (
