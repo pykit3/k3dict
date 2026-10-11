@@ -42,15 +42,15 @@ def depth_iter(mydict, ks=None, maxdepth=10240, intermediate=False, empty_leaf=F
 
         if len(ks) >= maxdepth:
             if is_allowed is None or is_allowed(ks, v):
-                yield ks, v
+                yield ks[:], v
         else:
             if isinstance(v, dict):
                 if is_allowed is not None:
                     if is_allowed(ks, v):
-                        yield ks, v
+                        yield ks[:], v
                 else:
                     if intermediate or (empty_leaf and len(v) == 0):
-                        yield ks, v
+                        yield ks[:], v
 
                 yield from depth_iter(
                     v,
@@ -62,7 +62,7 @@ def depth_iter(mydict, ks=None, maxdepth=10240, intermediate=False, empty_leaf=F
                 )
             else:
                 if is_allowed is None or is_allowed(ks, v):
-                    yield ks, v
+                    yield ks[:], v
 
         ks.pop(-1)
 

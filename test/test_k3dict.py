@@ -38,19 +38,10 @@ class TestDictDeepIter(unittest.TestCase):
         )
 
         for _in, _out in cases:
-            idx = 0
-
-            for rst in k3dict.depth_iter(_in):
-                self.assertEqual(
-                    _out[idx],
-                    rst,
-                    (f"input: {_in!r}, output: {_out[idx]!r}, expected: {rst!r}"),
-                )
-
-                idx = idx + 1
+            rst = list(k3dict.depth_iter(_in))
+            self.assertEqual(_out, rst, f"input: {_in!r}")
 
     def test_depth_iter_ks(self):
-        idx = 0
         ks = ["mykey"]
 
         _in = {"k1": {"k11": "v11"}, "k2": "v2"}
@@ -58,20 +49,11 @@ class TestDictDeepIter(unittest.TestCase):
             (["mykey", "k1", "k11"], "v11"),
             (["mykey", "k2"], "v2"),
         ]
-        _mes = "test argument ks in k3dict.dict_depth_iter()"
 
-        for rst in k3dict.depth_iter(_in, ks=ks):
-            self.assertEqual(
-                _out[idx],
-                rst,
-                (f"input: {_in!r}, output: {_out[idx]!r}, expected: {rst!r},message: {_mes}"),
-            )
-
-            idx = idx + 1
+        rst = list(k3dict.depth_iter(_in, ks=ks))
+        self.assertEqual(_out, rst)
 
     def test_depth_iter_maxdepth(self):
-        idx = 0
-
         _in = {
             "k1": {
                 "k11": {
@@ -89,15 +71,11 @@ class TestDictDeepIter(unittest.TestCase):
             (["k1", "k11", "k111", "k1111"], "v1111"),
         ]
 
+        rst = []
         for depth in range(1, 5):
-            for rst in k3dict.depth_iter(_in, maxdepth=depth):
-                dd("depth:", depth)
-                dd("_in:", _in)
-                dd("_out[idx]:", _out[idx])
-                dd("rst:", rst)
-                self.assertEqual(_out[idx], rst)
+            rst.extend(k3dict.depth_iter(_in, maxdepth=depth))
 
-                idx = idx + 1
+        self.assertEqual(_out, rst)
 
     def test_depth_iter_intermediate(self):
         _in = {
@@ -117,13 +95,8 @@ class TestDictDeepIter(unittest.TestCase):
             (["k1", "k11", "k111", "k1111"], "v1111"),
         ]
 
-        idx = 0
-        for rst in k3dict.depth_iter(_in, intermediate=True):
-            self.assertEqual(_out[idx], rst)
-
-            idx = idx + 1
-
-        self.assertEqual(len(_out), idx)
+        rst = list(k3dict.depth_iter(_in, intermediate=True))
+        self.assertEqual(_out, rst)
 
     def test_depth_iter_empty_as_leaf(self):
         _in = {
@@ -140,12 +113,8 @@ class TestDictDeepIter(unittest.TestCase):
             (["k1", "k11", "k111", "k1111"], "v1111"),
         ]
 
-        idx = 0
-        for rst in k3dict.depth_iter(_in, empty_leaf=True):
-            self.assertEqual(_out[idx], rst)
-            idx = idx + 1
-
-        self.assertEqual(len(_out), idx)
+        rst = list(k3dict.depth_iter(_in, empty_leaf=True))
+        self.assertEqual(_out, rst)
 
     def test_depth_iter_empty_as_leaf_and_intermediate(self):
         _in = {
@@ -165,12 +134,8 @@ class TestDictDeepIter(unittest.TestCase):
             (["k1", "k11", "k111", "k1111"], "v1111"),
         ]
 
-        idx = 0
-        for rst in k3dict.depth_iter(_in, intermediate=True, empty_leaf=True):
-            self.assertEqual(_out[idx], rst)
-            idx = idx + 1
-
-        self.assertEqual(len(_out), idx)
+        rst = list(k3dict.depth_iter(_in, intermediate=True, empty_leaf=True))
+        self.assertEqual(_out, rst)
 
     def test_depth_iter_is_allowed(self):
         _in = {
@@ -220,13 +185,8 @@ class TestDictDeepIter(unittest.TestCase):
         )
 
         for kwargs, expected_ks, expected_v, msg in cases:
-            dd(msg)
-            dd(kwargs)
-            dd("expected:", expected_ks, expected_v)
-
-            for ks, v in k3dict.depth_iter(_in, **kwargs):
-                self.assertEqual(expected_ks, ks)
-                self.assertEqual(expected_v, v)
+            rst = list(k3dict.depth_iter(_in, **kwargs))
+            self.assertEqual([(expected_ks, expected_v)], rst, msg)
 
 
 class TestDictBreadthIter(unittest.TestCase):
