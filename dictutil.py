@@ -1,5 +1,6 @@
 import copy
 import operator
+from collections import deque
 
 
 def depth_iter(mydict, ks=None, maxdepth=10240, intermediate=False, empty_leaf=False, is_allowed=None):
@@ -73,13 +74,13 @@ def breadth_iter(mydict):
     :return: an iterator, each element it yields is a tuple that contains keys and value.
     """
 
-    q = [([], mydict)]
+    q = deque([([], mydict)])
 
     while True:
         if len(q) < 1:
             break
 
-        _ks, node = q.pop(0)
+        _ks, node = q.popleft()
         for k, v in node.items():
             ks = _ks[:]
             ks.append(k)
